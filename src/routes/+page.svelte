@@ -1,43 +1,44 @@
-<script>
-  import { onMount } from 'svelte';
+const list = document.getElementById('todo-list');
+const form = document.getElementById('todo-form');
+const input = document.querySelector('input[type="text"]');
 
-  let todos = [];
-  let newTodo = '';
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
 
-  // загружаем из localStorage при старте
-  onMount(() => {
-    const saved = localStorage.getItem('todos');
-    todos = saved ? JSON.parse(saved) : [];
+  const li = document.createElement('li');
+  li.textContent = `${text} (not done)`;
+  li.addEventListener('click', () => {
+    li.textContent = li.textContent.includes('(not done)')
+      ? `${text} (done)`
+      : `${text} (not done)`;
   });
 
-  // сохраняем каждый раз при изменении списка
-  $: localStorage.setItem('todos', JSON.stringify(todos));
+  list.appendChild(li);
+  input.value = '';
+  saveTodos();
+});
 
-  function addTodo() {
-    const text = newTodo.trim();
-    if (!text) return;
-    todos = [...todos, { text, done: false }];
-    newTodo = '';
-  }
+function saveTodos() {
+  const items = Array.from(list.children).map(li => li.textContent);
+  localStorage.setItem('todos', JSON.stringify(items));
+}
 
-  function toggleTodo(i) {
-    todos[i].done = !todos[i].done;
-    todos = [...todos];
-  }
-</script>
+function loadTodos() {
+  const items = JSON.parse(localStorage.getItem('todos') || '[]');
+  items.forEach(text => {
+    const li = document.createElement('li');
+    li.textContent = text;
+    li.addEventListener('click', () => {
+      const base = text.split(' (')[0];
+      li.textContent = li.textContent.includes('(not done)')
+        ? `${base} (done)`
+        : `${base} (not done)`;
+      saveTodos();
+    });
+    list.appendChild(li);
+  });
+}
 
-<h1>Todo app</h1>
-
-<form on:submit|preventDefault={addTodo}>
-  <input type="text" bind:value={newTodo} placeholder="Add todo" />
-  <input type="submit" value="Add" />
-</form>
-
-<ul>
-  {#each todos as todo, i}
-    <!-- важно: ВНУТРИ <li> только текст, без span/label -->
-    <li on:click={() => toggleTodo(i)}>
-      {@html `${todo.text} (${todo.done ? 'done' : 'not done'})`}
-    </li>
-  {/each}
-</ul>
+loadTodos();
