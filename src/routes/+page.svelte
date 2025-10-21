@@ -1,6 +1,5 @@
 <script>
   import { onMount } from 'svelte';
-
   let todos = [];
   let newTodo = '';
 
@@ -24,25 +23,17 @@
   }
 </script>
 
-<main>
-  <h1>Todo App</h1>
+<h1>Todo App</h1>
 
-  <section>
-    <h2>Add a new todo:</h2>
-    <form on:submit|preventDefault={addTodo}>
-      <input type="text" bind:value={newTodo} placeholder="e.g. Oranges" />
-      <input type="submit" value="Add" />
-    </form>
-  </section>
+<form on:submit|preventDefault={addTodo}>
+  <input type="text" bind:value={newTodo} placeholder="Add todo" />
+  <input type="submit" value="Add" />
+</form>
 
-  <section>
-    <h2>Todos:</h2>
-    <ul>
-      {#each todos as todo, i}
-        <li on:click={() => toggleTodo(i)}>
-          {@html `${todo.text} (${todo.done ? 'done' : 'not done'})`}
-        </li>
-      {/each}
-    </ul>
-  </section>
-</main>
+<ul>
+  {#each todos as todo, i}
+    <li on:click={() => toggleTodo(i)}>
+      {todo.text} ({todo.done ? 'done' : 'not done'})
+    </li>
+  {/each}
+</ul>
