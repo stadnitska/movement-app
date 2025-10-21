@@ -46,8 +46,8 @@
     <ul>
       {#each todos as todo, i}
         <li on:click={() => toggle(i)}>
-          <span data-testid="todo-text-{i}">{display(todo)}</span>
-        </li>
+  {`${todo.text} (${todo.done ? 'done' : 'not done'})`}
+</li>
       {/each}
     </ul>
   {/if}
