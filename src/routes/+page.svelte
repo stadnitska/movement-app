@@ -29,9 +29,10 @@
 </form>
 
 <ul>
-  {#each todos as todo}
-    <li on:click={() => toggle(todo)}>
+  {#each todos as todo, i}
+    <li on:click={() => toggleTodo(i)}>
       {todo.text} ({todo.done ? 'done' : 'not done'})
     </li>
   {/each}
 </ul>
+
