@@ -4,28 +4,24 @@
   let todos = [];
   let newTodo = '';
 
-  // Загружаем из localStorage при запуске
   onMount(() => {
-    const stored = localStorage.getItem('todos');
-    todos = stored ? JSON.parse(stored) : [];
+    const saved = localStorage.getItem('todos');
+    todos = saved ? JSON.parse(saved) : [];
   });
 
-  // Сохраняем в localStorage при каждом изменении
+  // сохраняем каждый раз при изменении
   $: localStorage.setItem('todos', JSON.stringify(todos));
 
   function addTodo() {
-    if (newTodo.trim() === '') return;
-    todos = [...todos, { text: newTodo.trim(), done: false }];
+    const text = newTodo.trim();
+    if (!text) return;
+    todos = [...todos, { text, done: false }];
     newTodo = '';
   }
 
-  function toggleTodo(index) {
-    todos[index].done = !todos[index].done;
-    todos = [...todos]; // заставляем Svelte перерендерить
-  }
-
-  function clearTodos() {
-    todos = [];
+  function toggleTodo(i) {
+    todos[i].done = !todos[i].done;
+    todos = [...todos];
   }
 </script>
 
@@ -38,10 +34,9 @@
 
 <ul>
   {#each todos as todo, i}
+    <!-- один единственный текстовый узел внутри <li> -->
     <li on:click={() => toggleTodo(i)}>
       {todo.text} ({todo.done ? 'done' : 'not done'})
     </li>
   {/each}
 </ul>
-
-<button on:click={clearTodos}>Clear all</button>
