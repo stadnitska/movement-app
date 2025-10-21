@@ -4,12 +4,13 @@
   let todos = [];
   let newTodo = '';
 
+  // загружаем из localStorage при старте
   onMount(() => {
     const saved = localStorage.getItem('todos');
     todos = saved ? JSON.parse(saved) : [];
   });
 
-  // сохраняем каждый раз при изменении
+  // сохраняем каждый раз при изменении списка
   $: localStorage.setItem('todos', JSON.stringify(todos));
 
   function addTodo() {
@@ -34,9 +35,9 @@
 
 <ul>
   {#each todos as todo, i}
-    <!-- один единственный текстовый узел внутри <li> -->
+    <!-- важно: ВНУТРИ <li> только текст, без span/label -->
     <li on:click={() => toggleTodo(i)}>
-      {todo.text} ({todo.done ? 'done' : 'not done'})
+      {@html `${todo.text} (${todo.done ? 'done' : 'not done'})`}
     </li>
   {/each}
 </ul>
