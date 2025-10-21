@@ -23,7 +23,7 @@
       padding: 8px;
       font-size: 16px;
     }
-    button[type="submit"] {
+    #add-button {
       padding: 8px 20px;
       background-color: #4CAF50;
       color: white;
@@ -58,7 +58,7 @@
   <h1>Todo List</h1>
   <form id="todo-form">
     <input type="text" id="todo-input" placeholder="What needs to be done?" required>
-	<button type="submit" id="add-button">Add</button>
+    <button type="submit" id="add-button">Add Todo</button>
   </form>
   <ul id="todo-list"></ul>
 
@@ -81,7 +81,8 @@
         const li = document.createElement('li');
         li.innerHTML = `
           <span>${todo.text} (${todo.completed ? 'done' : 'not done'})</span>
-<button type="button" class="delete-btn" data-id="${index}">Delete</button>        `;
+          <button type="button" class="delete-btn" data-id="${index}">Delete</button>
+        `;
         todoList.appendChild(li);
       });
     }
