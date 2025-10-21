@@ -44,12 +44,13 @@
     <p>No todos added yet.</p>
   {:else}
     <ul>
-      {#each todos as todo, i}
-        <li on:click={() => toggle(i)}>
-          <span data-testid="todo-text-{i}">{display(todo)}</span>
-        </li>
-      {/each}
-    </ul>
+  {#each todos as todo, i}
+    <li on:click={() => toggleTodo(i)}>
+      {todo.text} ({todo.done ? 'done' : 'not done'})
+    </li>
+  {/each}
+</ul>
+
   {/if}
 </main>
 
