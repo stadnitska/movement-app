@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movement App</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    #position { font-size: 24px; margin: 20px 0; }
+    button { padding: 10px 20px; font-size: 18px; margin: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Movement App</h1>
+  <div id="position">Position: (0, 0)</div>
+  <div><button id="up">Up</button></div>
+  <div>
+    <button id="left">Left</button>
+    <button id="down">Down</button>
+    <button id="right">Right</button>
+  </div>
+  <script>
+    let position = JSON.parse(localStorage.getItem('position')) || { x: 0, y: 0 };
+    const positionElement = document.getElementById('position');
+    function updatePosition() {
+      positionElement.textContent = `Position: (${position.x}, ${position.y})`;
+      localStorage.setItem('position', JSON.stringify(position));
+    }
+    document.getElementById('up').addEventListener('click', () => { position.y += 1; updatePosition(); });
+    document.getElementById('down').addEventListener('click', () => { position.y -= 1; updatePosition(); });
+    document.getElementById('left').addEventListener('click', () => { position.x -= 1; updatePosition(); });
+    document.getElementById('right').addEventListener('click', () => { position.x += 1; updatePosition(); });
+    updatePosition();
+  </script>
+</body>
+</html>
