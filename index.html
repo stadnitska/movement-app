@@ -1,34 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Movement App</title>
+  <title>Todo App</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-    #position { font-size: 24px; margin: 20px 0; }
-    button { padding: 10px 20px; font-size: 18px; margin: 5px; }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    #todo-form {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    #todo-input {
+      flex-grow: 1;
+      padding: 8px;
+      font-size: 16px;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      padding: 10px;
+      background: #f4f4f4;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .delete-btn {
+      background-color: #f44336;
+    }
   </style>
 </head>
 <body>
-  <h1>Movement App</h1>
-  <div id="position">Position: (0, 0)</div>
-  <div><button id="up">Up</button></div>
-  <div>
-    <button id="left">Left</button>
-    <button id="down">Down</button>
-    <button id="right">Right</button>
-  </div>
+  <h1>Todo App</h1>
+  <form id="todo-form">
+    <input type="text" id="todo-input" placeholder="Add a new todo" required>
+    <button type="submit">Add Todo</button>
+  </form>
+  <ul id="todo-list"></ul>
+
   <script>
-    let position = JSON.parse(localStorage.getItem('position')) || { x: 0, y: 0 };
-    const positionElement = document.getElementById('position');
-    function updatePosition() {
-      positionElement.textContent = `Position: (${position.x}, ${position.y})`;
-      localStorage.setItem('position', JSON.stringify(position));
+    const todoForm = document.getElementById('todo-form');
+    const todoInput = document.getElementById('todo-input');
+    const todoList = document.getElementById('todo-list');
+    let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+    function renderTodos() {
+      todoList.innerHTML = '';
+      todos.forEach((todo, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${todo.text}</span>
+          <button class="delete-btn" data-index="${index}">Delete</button>
+        `;
+        todoList.appendChild(li);
+      });
     }
-    document.getElementById('up').addEventListener('click', () => { position.y += 1; updatePosition(); });
-    document.getElementById('down').addEventListener('click', () => { position.y -= 1; updatePosition(); });
-    document.getElementById('left').addEventListener('click', () => { position.x -= 1; updatePosition(); });
-    document.getElementById('right').addEventListener('click', () => { position.x += 1; updatePosition(); });
-    updatePosition();
+
+    todoForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = todoInput.value.trim();
+      if (text) {
+        todos.push({ text, completed: false });
+        localStorage.setItem('todos', JSON.stringify(todos));
+        todoInput.value = '';
+        renderTodos();
+      }
+    });
+
+    todoList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('delete-btn')) {
+        const index = e.target.getAttribute('data-index');
+        todos.splice(index, 1);
+        localStorage.setItem('todos', JSON.stringify(todos));
+        renderTodos();
+      }
+    });
+
+    renderTodos();
   </script>
 </body>
 </html>
