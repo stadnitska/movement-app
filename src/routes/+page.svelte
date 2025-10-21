@@ -45,9 +45,8 @@
   {:else}
     <ul>
       {#each todos as todo, i}
-        <li on:click={() => toggle(i)}>
-  {`${todo.text} (${todo.done ? 'done' : 'not done'})`}
-</li>
+        <li>{todo.text} ({todo.done ? 'done' : 'not done'})</li>
+
       {/each}
     </ul>
   {/if}
